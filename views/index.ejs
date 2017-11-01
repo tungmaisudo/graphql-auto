@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>
+    <%= title %>
+  </title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <h1>
+    <%= title %>
+  </h1>
+  <p>Welcome to
+    <%= title %>
+  </p>
+  <!-- <form action="/graphql" method="GET"> -->
+  <input type="text" name="api" id="api" placeholder="api" /><br/>
+  <button id="submit" onclick="openGraphql()">Submit</button>
+
+  <!-- </form> -->
+
+  <script>
+    function openGraphql() {
+      var urlGraphql = document.getElementById('api').value;
+      var url = "http://localhost:3000/graphql?api=" + encodeURIComponent(urlGraphql);
+      var win = window.open(url, '_blank');
+      win.focus();
+    }
+  </script>
+
+</body>
+
+</html>
