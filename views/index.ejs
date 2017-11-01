@@ -23,8 +23,9 @@
 
   <script>
     function openGraphql() {
+      var urlHost = window.location.protocol + "//" + window.location.hostname;
       var urlGraphql = document.getElementById('api').value;
-      var url = "http://localhost:3000/graphql?api=" + encodeURIComponent(urlGraphql);
+      var url = urlHost + "/graphql?api=" + encodeURIComponent(urlGraphql);
       var win = window.open(url, '_blank');
       win.focus();
     }
