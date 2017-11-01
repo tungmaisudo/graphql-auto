@@ -157,6 +157,6 @@ app.use('/graphql', graphqlHTTP((request, response, graphQLParams) => {
     })
 }))
 
-app.listen(3000, () => {
+app.listen(process.env.PORT ||3000, () => {
   console.log('GraphQL server running at port 3000...')
 })
