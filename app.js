@@ -58,9 +58,11 @@ function getGraphqlType(jsonData, nameType) {
       }
     } else if (typeOfData === 'object') {
       if (data instanceof Array) {
-        let typeData = getGraphqlType(data[0], key);
-        objectTarget[key] = {
-          type: new GraphQLList(typeData)
+        if (data.length != 0) {
+          let typeData = getGraphqlType(data[0], key);
+          objectTarget[key] = {
+            type: new GraphQLList(typeData)
+          }
         }
       }
       else {
@@ -98,9 +100,9 @@ function getGraphqlType(jsonData, nameType) {
 //   method: 'POST',
 //   uri: 'https://www.bookcar.net.vn/webservice.php',
 //   body: queryString.stringify(data),
-//   headers: {
-//     "content-type": "application/x-www-form-urlencoded"
-//   }
+// headers: {
+//   "content-type": "application/x-www-form-urlencoded"
+// }
 // };
 
 // };
