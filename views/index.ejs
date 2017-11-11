@@ -82,9 +82,9 @@
   <script>
     $('#postValue').hide();
     function openGraphql() {
-      // var urlHost = window.location.protocol + "//" + window.location.hostname;
+      var urlHost = window.location.protocol + "//" + window.location.hostname;
       var urlGraphql = document.getElementById('api').value;
-      var urlHost = "http://localhost:3000";
+      // var urlHost = "http://localhost:3000";
       var checkMethodSend = $('[name="method"]:checked').val();
       if (urlGraphql == "" || urlGraphql == null) {
         alert("Bạn chưa nhập url");
