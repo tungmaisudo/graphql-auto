@@ -80,56 +80,72 @@ function getGraphqlType(jsonData, nameType) {
 }
 
 // var data = {
-//   iUserId: "47",
-//   type: "countryList",
-//   tSessionId: "fdfd",
-//   GeneralMemberId: "47",
-//   GeneralUserType: "DRIVER",
-//   GeneralDeviceType: "IOS",
-//   AppVersion: "1.3",
-//   Platform: "IOS",
-//   GeneralAppVersion: "1.3",
-//   vDeviceType: "IOS",
-//   UserType: "DRIVER",
-//   vDeviceToken: "2575ffa260614e03d6c215461ab9190ffa535dd5e15a0c208f0e392d36450876"
+//   "iUserId": "47",
+//   "type": "countryList",
+//   "tSessionId": "fdfd",
+//   "GeneralMemberId": "47",
+//   "GeneralUserType": "DRIVER",
+//   "GeneralDeviceType": "IOS",
+//   "AppVersion": "1.3",
+//   "Platform": "IOS",
+//   "GeneralAppVersion": "1.3",
+//   "vDeviceType": "IOS",
+//   "UserType": "DRIVER",
+//   "vDeviceToken": "2575ffa260614e03d6c215461ab9190ffa535dd5e15a0c208f0e392d36450876"
 // }
 
 // var options = {
 //   method: 'POST',
-//   uri: CONFIG.BASE_URL,
+//   uri: 'https://www.bookcar.net.vn/webservice.php',
 //   body: queryString.stringify(data),
 //   headers: {
-//     'content-type': 'application/x-www-form-urlencoded'
+//     "content-type": "application/x-www-form-urlencoded"
 //   }
 // };
+
+// };
+// rp(options)
+//   .then(function (parsedBody) {
+//     console.log(parsedBody);
+//   });
+
 // GraphQL API
-// https://jsonplaceholder.typicode.com/posts/1
 app.use('/graphql', graphqlHTTP((request, response, graphQLParams) => {
-  console.log(request.query.api);
+  // console.log(request.query);
+  var apiLink = request.query.api;
+  // var options;
+  // if (request.query.method == 'get') {
   var options = {
     method: 'GET',
-    uri: request.query.api,
-    // body: queryString.stringify(data),
-    headers: {
-      'content-type': 'application/x-www-form-urlencoded'
-    }
+    uri: request.query.api
   };
+  // }
+  // if (request.query.method == 'post') {
+  //   var urlFull = request.url;
+  //   var urlHeaders = JSON.parse('{"' + decodeURI(urlFull.substring(urlFull.indexOf("&hdgraphql") + 10, urlFull.indexOf("&bdgraphql"))).replace(/"/g, '\\"').replace(/%2F/g, '\/').replace(/&/g, '","').replace(/=/g, '":"') + '"}');
+  //   var urlBody = JSON.parse('{"' + decodeURI(urlFull.substring(urlFull.indexOf("&bdgraphql") + 10, urlFull.length)).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}');
+  //   options = {
+  //     method: 'POST',
+  //     uri: apiLink,
+  //     body: queryString.stringify(urlBody),
+  //     headers: urlHeaders
+  //   };
+  // }
   return rp(options)
     .then(function (parsedBody) {
       var dataResponse = JSON.parse(parsedBody);
+      var checkValue = dataResponse instanceof Array;
+      if (checkValue) {
+        dataResponse = dataResponse[0];
+      }
       var dataResponseType = getGraphqlType(dataResponse, 'dataResponse');
-
+      var typeResponse = (!checkValue) ? dataResponseType : new GraphQLList(dataResponseType);
       var queriesResponse = {
-        type: dataResponseType,
-        // args: {
-        //   data: {
-        //     type: new GraphQLNonNull(APIInput)
-        //   }
-        // },
+        type: typeResponse,
         resolve(root, params) {
           return rp(options)
-            .then(function (parsedBody) {
-              return JSON.parse(parsedBody);
+            .then(function (parsedBody1) {
+              return JSON.parse(parsedBody1);
             })
             .catch(function (err) {
               console.log(err)
@@ -157,6 +173,6 @@ app.use('/graphql', graphqlHTTP((request, response, graphQLParams) => {
     })
 }))
 
-app.listen(process.env.PORT ||3000, () => {
+app.listen(process.env.PORT || 3000, () => {
   console.log('GraphQL server running at port 3000...')
 })
