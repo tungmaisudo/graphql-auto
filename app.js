@@ -113,24 +113,24 @@ function getGraphqlType(jsonData, nameType) {
 app.use('/graphql', graphqlHTTP((request, response, graphQLParams) => {
   // console.log(request.query);
   var apiLink = request.query.api;
-  // var options;
-  // if (request.query.method == 'get') {
-  var options = {
-    method: 'GET',
-    uri: request.query.api
-  };
-  // }
-  // if (request.query.method == 'post') {
-  //   var urlFull = request.url;
-  //   var urlHeaders = JSON.parse('{"' + decodeURI(urlFull.substring(urlFull.indexOf("&hdgraphql") + 10, urlFull.indexOf("&bdgraphql"))).replace(/"/g, '\\"').replace(/%2F/g, '\/').replace(/&/g, '","').replace(/=/g, '":"') + '"}');
-  //   var urlBody = JSON.parse('{"' + decodeURI(urlFull.substring(urlFull.indexOf("&bdgraphql") + 10, urlFull.length)).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}');
-  //   options = {
-  //     method: 'POST',
-  //     uri: apiLink,
-  //     body: queryString.stringify(urlBody),
-  //     headers: urlHeaders
-  //   };
-  // }
+  var options;
+  if (request.query.method == 'get') {
+    options = {
+      method: 'GET',
+      uri: request.query.api
+    };
+  }
+  if (request.query.method == 'post') {
+    var urlFull = request.url;
+    var urlHeaders = JSON.parse('{"' + decodeURI(urlFull.substring(urlFull.indexOf("&hdgraphql") + 10, urlFull.indexOf("&bdgraphql"))).replace(/"/g, '\\"').replace(/%2F/g, '\/').replace(/&/g, '","').replace(/=/g, '":"') + '"}');
+    var urlBody = JSON.parse('{"' + decodeURI(urlFull.substring(urlFull.indexOf("&bdgraphql") + 10, urlFull.length)).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}');
+    options = {
+      method: 'POST',
+      uri: request.query.api,
+      body: queryString.stringify(urlBody),
+      headers: urlHeaders
+    };
+  }
   return rp(options)
     .then(function (parsedBody) {
       var dataResponse = JSON.parse(parsedBody);
