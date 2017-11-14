@@ -49,7 +49,6 @@ const queryString = require('query-string');
 function getGraphqlType(jsonData, nameType) {
   let objectTarget = {};
   for (let key in jsonData) {
-    // console.log(key);
     var data = jsonData[key];
     let typeOfData = typeof data;
     if (typeOfData === 'number' || typeOfData === 'string') {
@@ -66,9 +65,15 @@ function getGraphqlType(jsonData, nameType) {
         }
       }
       else {
-        let typeData = getGraphqlType(data, key);
-        objectTarget[key] = {
-          type: typeData
+        if (!isEmpty(data)) {
+          let typeData = getGraphqlType(data, key);
+          objectTarget[key] = {
+            type: typeData
+          }
+        }else{
+          // objectTarget[key] = {
+          //   type: GraphQLList
+          // }
         }
 
       }
@@ -79,6 +84,15 @@ function getGraphqlType(jsonData, nameType) {
     fields: () => (objectTarget)
   });
   return typeTarget;
+}
+
+function isEmpty(obj) {
+  for (var prop in obj) {
+    if (obj.hasOwnProperty(prop))
+      return false;
+  }
+
+  return JSON.stringify(obj) === JSON.stringify({});
 }
 
 // var data = {
