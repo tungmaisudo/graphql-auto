@@ -60,7 +60,8 @@ function getGraphqlType(jsonData, nameType) {
         if (data.length != 0) {
           let typeData = getGraphqlType(data[0], key);
           objectTarget[key] = {
-            type: new GraphQLList(typeData)
+            type: new GraphQLList(typeData),
+
           }
         }
       }
@@ -70,10 +71,11 @@ function getGraphqlType(jsonData, nameType) {
           objectTarget[key] = {
             type: typeData
           }
-        }else{
-          // objectTarget[key] = {
-          //   type: GraphQLList
-          // }
+        } else {
+          objectTarget[key] = {
+            type: GraphQLString,
+            description: "Object empty"
+          }
         }
 
       }
@@ -149,6 +151,7 @@ app.use('/graphql', graphqlHTTP((request, response, graphQLParams) => {
   }
   return rp(options)
     .then(function (parsedBody) {
+      // console.log(parsedBody);
       var dataResponse = JSON.parse(parsedBody);
       var checkValue = dataResponse instanceof Array;
       if (checkValue) {
